@@ -14,11 +14,13 @@ from_index(true, FromIndex)  -> FromIndex + 1;
 from_index(false, FromIndex) -> FromIndex.
 
 is_free_day(Year, Mon, Day) ->
-  is_bank_holiday(Mon, Day) orelse is_weekend(Year, Mon, Day).
+  is_bank_holiday(Year, Mon, Day) orelse is_weekend(Year, Mon, Day).
 
 is_weekend(Year, Mon, Day) -> calendar:day_of_the_week(Year, Mon, Day) > 5.
 
-is_bank_holiday(Mon, Day) -> maps:get({Mon, Day}, ?bank_days, false).
+is_bank_holiday(Year, Mon, Day) ->
+  BankDays = maps:get(Year, ?bank_days, #{}),
+  maps:get({Mon, Day}, BankDays, false).
 
 build_index(Year) ->
   CounterFn = fun({Mon, Day, true} = _DayTpl, {GlobalCounter, NewList})   ->

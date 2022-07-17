@@ -9,7 +9,8 @@
 -record(state, {days_index :: map() }).
 
 start_link() ->
-  Index = working_days_util:build_index(2022),
+  {{CurrentYear, _, _},{_, _, _}} = calendar:local_time(),
+  Index = working_days_util:build_index(CurrentYear),
   gen_server:start_link({local, super_calendar}, ?MODULE, Index, []).
 
 init(DaysIndex) ->

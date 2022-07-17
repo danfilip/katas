@@ -1,4 +1,4 @@
--module(bank_days_tests).
+-module(working_days_util_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
