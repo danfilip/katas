@@ -13,7 +13,7 @@ can_attend_basic(Intervals) ->
 
 can_attend(Intervals) ->
   FoldFn = fun([X, Y], {Min, Max, SegmentsSum}) when X < Y ->
-             {min(X, Min), max(Y, Max), SegmentsSum + (Y - X) }
+             {min(X, Min), max(Y, Max), SegmentsSum + (Y - X + 1) }
            end,
   {Min, Max, SegmentsSum} = lists:foldl(FoldFn, {infinity, 0, 0}, Intervals),
-  {SegmentsSum =< Max - Min, Min, Max, SegmentsSum}.
+  SegmentsSum =< Max - Min + 1.
