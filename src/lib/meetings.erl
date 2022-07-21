@@ -2,15 +2,18 @@
 
 -export([can_attend/1, can_attend_basic/1]).
 
-can_attend_basic(Input) ->
-  Input2 = lists:map(fun([X,Y]) -> lists:seq(X, Y) end, Input),
-  Sets = lists:map(fun(L) -> sets:from_list(L) end, Input2),
-  Ret = sets:intersection(Sets),
-  sets:is_empty(Ret).
+can_attend_basic(Intervals) ->
+  MinutesSets = lists:map(fun([X,Y]) ->
+                          Minutes = lists:seq(X, Y),
+                          sets:from_list(Minutes)
+                     end, Intervals),
+  Ret = sets:intersection(MinutesSets),
+  sets:is_empty(Ret),
+  Ret.
 
-can_attend(List) ->
-  FoldFn = fun([X, Y], {Min, Max, SegmentSum}) when X < Y ->
-             {min(X, Min), max(Y, Max), SegmentSum + (Y - X) }
+can_attend(Intervals) ->
+  FoldFn = fun([X, Y], {Min, Max, SegmentsSum}) when X < Y ->
+             {min(X, Min), max(Y, Max), SegmentsSum + (Y - X) }
            end,
-  {Min, Max, SegmentSum} = lists:foldl(FoldFn, {0, 0, 0}, List),
-  SegmentSum =< Max - Min.
+  {Min, Max, SegmentsSum} = lists:foldl(FoldFn, {infinity, 0, 0}, Intervals),
+  {SegmentsSum =< Max - Min, Min, Max, SegmentsSum}.
